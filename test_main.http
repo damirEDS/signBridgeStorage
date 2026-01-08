@@ -1,0 +1,68 @@
+# Test FastAPI S3 Storage Endpoints
+
+### Test FastAPI S3 Storage Endpoints
+
+### Health Check
+GET http://127.0.0.1:8000/health
+Accept: application/json
+
+###
+DELETE http://127.0.0.1:8000/api/v1/files/uploads/2024/01/08/test.txt
+Accept: application/json
+
+###
+
+
+### Root Endpoint
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+### Upload File (replace with actual file path)
+POST http://127.0.0.1:8000/api/v1/files/upload
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="test.txt"
+Content-Type: text/plain
+
+Test file content
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+### List Files
+GET http://127.0.0.1:8000/api/v1/files?prefix=uploads/&max_keys=10
+Accept: application/json
+
+###
+
+### Get File Metadata (replace with actual file key)
+GET http://127.0.0.1:8000/api/v1/files/metadata/uploads/2024/01/08/test.txt
+Accept: application/json
+
+###
+
+### Generate Presigned URL
+POST http://127.0.0.1:8000/api/v1/files/presigned-url
+Content-Type: application/json
+
+{
+  "file_key": "uploads/2024/01/08/test.txt",
+  "expiration": 3600,
+  "http_method": "GET"
+}
+
+###
+
+### Download File (replace with actual file key)
+GET http://127.0.0.1:8000/api/v1/files/uploads/2024/01/08/test.txt
+
+###
+
+### Delete File (replace with actual file key)
+DELETE http://127.0.0.1:8000/api/v1/files/uploads/2024/01/08/test.txt
+Accept: application/json
+
+###
