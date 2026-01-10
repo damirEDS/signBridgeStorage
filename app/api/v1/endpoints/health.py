@@ -46,9 +46,23 @@ async def readiness_check() -> ReadinessResponse:
     """
     s3_healthy = await s3_client.check_connection()
     
+    # Check Database connection
+    from app.db.session import AsyncSessionLocal
+    from sqlalchemy import text
+    db_healthy = False
+    try:
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
+            db_healthy = True
+    except Exception as e:
+        logger.error(f"Database readiness check failed: {e}")
+    
     return ReadinessResponse(
-        status="ready" if s3_healthy else "not_ready",
+        status="ready" if s3_healthy and db_healthy else "not_ready",
         s3_connection=s3_healthy,
+        # We can add db_connection to ReadinessResponse if we update the schema, 
+        # but for now, "status" reflecting both is the most critical part. 
+        # Ideally, we should update the schema to report DB status too.
         timestamp=datetime.utcnow().isoformat()
     )
 

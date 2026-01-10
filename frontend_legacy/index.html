@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignBridge Storage CMS</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal active">
+            <div class="modal-content glass-panel">
+                <h2>Вход в систему</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label>Логин</label>
+                        <input type="text" id="username" value="admin" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="password" value="adminpassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                    <p id="loginError" class="error-msg"></p>
+                </form>
+            </div>
+        </div>
+
+        <header class="glass-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="logo-icon">
+                    <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span>SignBridge CMS</span>
+            </div>
+
+            <nav class="main-nav">
+                <button class="nav-btn active" data-tab="files">Файлы</button>
+                <button class="nav-btn" data-tab="glosses">Словарь</button>
+                <button class="nav-btn" data-tab="cms">CMS</button>
+            </nav>
+
+            <div class="status-indicators">
+                <div class="status-badge" id="statusBadge">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Подключение...</span>
+                </div>
+                <button id="logoutBtn" class="btn-icon" title="Выход">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <!-- TAB: FILES -->
+            <section id="tab-files" class="tab-content active">
+                <div class="upload-section glass-panel">
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon-large">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <h3>Перетащите файлы сюда</h3>
+                        <p>или</p>
+                        <button class="btn btn-primary" id="selectFileBtn">Выберите файлы</button>
+                        <input type="file" id="fileInput" multiple hidden>
+                        <div class="upload-limits">
+                            <span>Максимум: 100 MB</span>
+                            <span>Типы: jpg, png, pdf, txt, zip</span>
+                        </div>
+                    </div>
+
+                    <div class="upload-progress" id="uploadProgress" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                        Назад
+                        </button>
+                        <span class="pagination-info" id="paginationInfo">Страница 1</span>
+                        <button class="btn-pagination" id="nextBtn">
+                            Вперед
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Files Grid -->
+                <div class="files-controls">
+                    <button class="btn-icon" id="refreshBtn" title="Обновить список">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M23 4v6h-6"></path>
+                            <path d="M1 20v-6h6"></path>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="files-grid" id="filesGrid">
+                    <!-- Filled by JS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

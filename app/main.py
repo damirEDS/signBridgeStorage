@@ -13,7 +13,7 @@ from pathlib import Path
 
 from app.config import settings
 from app.core.logging import setup_logging
-from app.api.v1.endpoints import files, health
+from app.api.v1.endpoints import files, health, auth, cms
 
 # Setup logging
 setup_logging()
@@ -38,9 +38,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
-    description="FastAPI S3 Storage Service for file upload/download operations",
-    docs_url="/docs" if settings.debug else None,
-    redoc_url="/redoc" if settings.debug else None,
+    description="API for S3 file storage and Sign Language CMS",
+    docs_url="/docs",
+    redoc_url="/redoc",
     lifespan=lifespan
 )
 
@@ -91,7 +91,9 @@ async def general_exception_handler(
 
 # Include routers
 app.include_router(health.router)
-app.include_router(files.router, prefix="/api/v1")
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
+app.include_router(files.router, prefix="/api/v1", tags=["files"])
+app.include_router(cms.router, prefix="/api/v1/cms", tags=["cms"])
 
 
 @app.get("/", tags=["root"])

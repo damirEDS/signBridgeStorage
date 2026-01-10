@@ -14,8 +14,7 @@ COPY pyproject.toml ./
 
 # Install Python dependencies
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir uv && \
-    uv pip install --system --no-cache -e .
+    pip install --no-cache-dir .
 
 # Production stage
 FROM python:3.13-slim

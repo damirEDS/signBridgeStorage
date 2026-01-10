@@ -71,7 +71,7 @@ class Settings(BaseSettings):
     # File Upload Settings
     max_file_size_mb: int = Field(default=100, alias="MAX_FILE_SIZE_MB")
     allowed_file_extensions: str = Field(
-        default=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt,.zip",
+        default=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.txt,.zip,.vrma,.glb,.gltf,.fbx",
         alias="ALLOWED_FILE_EXTENSIONS"
     )
     
@@ -92,6 +92,14 @@ class Settings(BaseSettings):
     # Logging
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     log_format: str = Field(default="json", alias="LOG_FORMAT")
+
+    # Database
+    database_url: str = Field(alias="DATABASE_URL")
+
+    # Authentication
+    secret_key: str = Field(alias="SECRET_KEY")
+    algorithm: str = Field(default="HS256", alias="ALGORITHM")
+    access_token_expire_minutes: int = Field(default=30, alias="ACCESS_TOKEN_EXPIRE_MINUTES")
     
     @property
     def max_file_size_bytes(self) -> int:
