@@ -19,10 +19,24 @@ This mirrors your local setup. You rent a VM, install Docker, and run your app.
 1.  **Create VM:** Create a Virtual Machine in Yandex Compute Cloud (e.g., Ubuntu 22.04).
 2.  **Install Docker:** SSH into the VM and install Docker & Docker Compose.
 3.  **Clone Repo:** `git clone <your-repo-url>`
-4.  **Configure Env:** Copy `.env.example` to `.env` and fill in production values (DB credits, S3 bucket).
-5.  **Run:** `docker-compose -f docker-compose.prod.yml up -d`
+4.  **Configure Env:** Copy `.env.example` to `.env`.
+    *   **DB_HOST**: Use the specific host provided by Yandex (click "Hosts" in the cluster dashboard). it usually looks like `rc1a-xyz...mdb.yandexcloud.net`.
+    *   **DB_USER**: `user1`
+    *   **DB_PASS**: (The password you set)
+    *   **DB_NAME**: `db1`
+    *   **DATABASE_URL**: For Yandex Managed DB, you need SSL.
+        *   **Note:** The Docker image now automatically includes the Yandex CA cert at `/app/certs/root.crt`.
+        *   String format: `postgresql+asyncpg://user1:password@rc1a-xyz.mdb.yandexcloud.net:6432/db1?ssl=verify-full&sslrootcert=/app/certs/root.crt`
+        *   **Important**: Note the port `6432` is common for the connection pooler (Odyssey), or `5432` for direct access.
+5.  **Run:** `docker-compose -f docker-compose.prod.yml up -d --build`
 
-> **Note:** You will need a `docker-compose.prod.yml` that builds the frontend and serves it via Nginx (already handled by your `frontend/Dockerfile` multi-stage build).
+> **Note:** I have created `docker-compose.prod.yml` in the repo. It handles the production build (Nginx for frontend, production settings for API).
+
+### 3. Yandex Managed PostgreSQL Specifics
+You created a cluster with **Public access: No**.
+*   **Implication:** You CANNOT connect to this DB from your laptop directly.
+*   **Deployment:** You **MUST** deploy your application (the VM from Option A) into the **SAME VPC Network** (`default`) and **SAME Availability Zone** (or enable accessing different zones) as the database.
+*   **Security Group:** Ensure the Security Group allows ingress on port 6432/5432 from your VM's internal IP.
 
 ### Option B: Managed Containers (Serverless Containers / K8s) (Advanced)
 Better for scaling, but requires building and pushing images to Yandex Container Registry (CR).
