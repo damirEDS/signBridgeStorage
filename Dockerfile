@@ -40,6 +40,10 @@ COPY --from=builder /certs /app/certs
 COPY --chown=appuser:appuser app/ ./app/
 COPY --chown=appuser:appuser frontend/ ./frontend/
 COPY --chown=appuser:appuser main.py ./
+COPY --chown=appuser:appuser alembic.ini ./
+COPY --chown=appuser:appuser alembic/ ./alembic/
+COPY --chown=appuser:appuser start.sh ./
+RUN chmod +x start.sh
 
 # Switch to non-root user
 USER appuser
@@ -52,4 +56,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
 
 # Run the application
-CMD ["gunicorn", "app.main:app", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120"]
+CMD ["./start.sh"]
